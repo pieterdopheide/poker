@@ -1,4 +1,4 @@
-mod card;
+use card::Card;
 
 #[allow(dead_code)]
 #[derive(PartialEq)]
@@ -12,24 +12,32 @@ enum Ranking {
     FullHouse,
     FourOfAKind,
     StraightFlush,
+    None,
 }
 
-struct Hand {
+pub struct Hand {
     cards: Vec<Card>,
     ranking: Ranking,
 }
 
-pub impl Hand {
-    fn add_card(&self, card: Card) {
+impl Default for Hand {
+    #[inline]
+    fn default() -> Hand {
+        Hand { cards: Vec::new(), ranking: Ranking::None }
+    }
+}
+
+impl Hand {
+    pub fn add_card(&mut self, card: Card) {
         self.cards.push(card);
     }
 
-    fn remove_card(&self, card: Card) {
-        self.cards.into_iter().filter(|&i|i.rank == card.rank && i.suit == card.suit).collect::<Vec<_>>();
-        println!("{:?}", self.cards);
+    fn discard_card(&mut self, card: Card) {
+        //self.cards.into_iter().filter(|&i|i.rank == card.rank && i.suit == card.suit).collect::<Vec<_>>();
+        self.cards.pop();
     }
 
-    fn show_hand(&self) {
+    pub fn show_hand(&self) {
         for card in &self.cards {
             card.print_card();
             print!(" ");
@@ -47,6 +55,7 @@ pub impl Hand {
             Ranking::FullHouse => println!("Full house"),
             Ranking::FourOfAKind => println!("Four of a kind"),
             Ranking::StraightFlush => println!("straight flush"),
+            Ranking::None => println!("None"),
         }
     }
 }

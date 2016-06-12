@@ -1,6 +1,4 @@
-use card::Card;
-use card::Rank;
-use card::Suit;
+use card::{Card, Rank, Suit};
 use rand::{thread_rng, Rng};
 
 pub struct Deck {
