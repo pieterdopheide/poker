@@ -2,7 +2,7 @@ use card::Card;
 
 #[allow(dead_code)]
 #[derive(PartialEq)]
-enum Ranking {
+pub enum Ranking {
     HighCard,
     OnePair,
     TwoPair,
@@ -16,8 +16,8 @@ enum Ranking {
 }
 
 pub struct Hand {
-    cards: Vec<Card>,
-    ranking: Ranking,
+    pub cards: Vec<Card>,
+    pub ranking: Ranking,
 }
 
 impl Default for Hand {
@@ -33,7 +33,6 @@ impl Hand {
     }
 
     fn discard_card(&mut self, card: Card) {
-        //self.cards.into_iter().filter(|&i|i.rank == card.rank && i.suit == card.suit).collect::<Vec<_>>();
         self.cards.pop();
     }
 
@@ -44,7 +43,11 @@ impl Hand {
         }
     }
 
-    fn print_ranking(&self) {
+    pub fn set_ranking(&mut self, ranking: Ranking) {
+        self.ranking = ranking;
+    }
+
+    pub fn print_ranking(&self) {
         match self.ranking {
             Ranking::HighCard => println!("High card"),
             Ranking::OnePair => println!("One pair"),
