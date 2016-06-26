@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use card::{Card, Rank};
+use card::{Card, Rank, Suit};
 use hand::Ranking;
 
 fn prepare(cards: Vec<Card>) -> usize {
@@ -15,6 +15,35 @@ fn prepare(cards: Vec<Card>) -> usize {
     }
 
     hand_map.len()
+}
+
+fn sort_cards_desc(mut cards: Vec<Card>) -> Vec<Card> {
+    let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
+
+    for x in 0..cards.len() {
+        let temp_index = x + 1;
+
+        for y in temp_index..cards.len() {
+            for z in 0..ranks.len() {
+                let mut cardx_rank = 0;
+                let mut cardy_rank = 0;
+
+                if ranks[z] == cards[x].rank {
+                    cardx_rank = z;
+                }
+                if ranks[z] == cards[y].rank {
+                    cardy_rank = z;
+                }
+                if cardx_rank < cardy_rank {
+                    let temp_value = cards[y];
+                    cards[y] = cards[x];
+                    cards[x] = temp_value;
+                }
+            }
+        }
+    }
+
+    cards
 }
 
 fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
@@ -34,31 +63,8 @@ fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
     }
 }
 
-fn two_pair_or_three_of_a_kind(mut cards: Vec<Card>) -> Ranking {
-    let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
-
-    for x in 0..cards.len() {
-        let temp_index = x + 1;
-
-        for y in temp_index..cards.len() {
-            for z in 0..ranks.len() {
-                let mut cardx_rank = 0;
-                let mut cardy_rank = 0;
-
-                if ranks[z] == cards[x].rank {
-                    cardx_rank = z;
-                }
-                if ranks[z] == cards[y].rank {
-                    cardy_rank = z;
-                }
-                if cardx_rank < cardy_rank {
-                    let temp_value = cards[y];
-                    cards[y] = cards[x];
-                    cards[x] = temp_value;
-                }
-            }
-        }
-    }
+fn two_pair_or_three_of_a_kind(cards: Vec<Card>) -> Ranking {
+    let cards = sort_cards_desc(cards);
 
     for x in 0..cards.len() {
         if x + 2 <= cards.len()
@@ -71,7 +77,7 @@ fn two_pair_or_three_of_a_kind(mut cards: Vec<Card>) -> Ranking {
     Ranking::TwoPair
 }
 
-fn further_evaluation(mut cards: Vec<Card>) -> Ranking {
+fn further_evaluation(cards: Vec<Card>) -> Ranking {
     let mut is_flush = false;
     let mut is_straight = false;
 
@@ -82,32 +88,9 @@ fn further_evaluation(mut cards: Vec<Card>) -> Ranking {
             is_flush = true;
     }
 
-    let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
-
+    let cards = sort_cards_desc(cards);
     let mut valued_ranks: Vec<usize> = Vec::new();
-
-    for x in 0..cards.len() {
-        let temp_index = x + 1;
-
-        for y in temp_index..cards.len() {
-            for z in 0..ranks.len() {
-                let mut cardx_rank = 0;
-                let mut cardy_rank = 0;
-
-                if ranks[z] == cards[x].rank {
-                    cardx_rank = z;
-                }
-                if ranks[z] == cards[y].rank {
-                    cardy_rank = z;
-                }
-                if cardx_rank < cardy_rank {
-                    let temp_value = cards[y];
-                    cards[y] = cards[x];
-                    cards[x] = temp_value;
-                }
-            }
-        }
-    }
+    let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
 
     for card in cards {
         for z in 0..ranks.len() {

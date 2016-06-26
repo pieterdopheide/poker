@@ -19,13 +19,11 @@ impl Default for Deck {
 
 impl Deck {
     pub fn shuffle_deck(&mut self) {
-        // shuffle deck
         let slice: &mut [Card] = self.cards.as_mut_slice();
         thread_rng().shuffle(slice);
     }
 
     pub fn draw_card(&mut self) -> Card {
-        // draw a card
         self.cards.pop().unwrap()
     }
 }
