@@ -28,10 +28,5 @@ impl Deck {
         // draw a card
         self.cards.pop().unwrap()
     }
-
-    pub fn deck_size(&self) {
-        // show cards remaining in the deck
-        println!("{}", self.cards.len());
-    }
 }
 

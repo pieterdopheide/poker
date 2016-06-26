@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use card::{Card, Rank, Suit};
+use card::{Card, Rank};
 use hand::Ranking;
 
 fn prepare(cards: Vec<Card>) -> usize {
@@ -15,21 +15,6 @@ fn prepare(cards: Vec<Card>) -> usize {
     }
 
     hand_map.len()
-}
-
-fn count_suits(cards: Vec<Card>) -> Vec<i32> {
-    let mut suit_count = vec![0, 0, 0, 0];
-
-    for card in cards {
-        match card.suit {
-            Suit::Club => suit_count[0] += 1,
-            Suit::Diamond => suit_count[1] += 1,
-            Suit::Heart => suit_count[2] += 1,
-            Suit::Spade => suit_count[3] += 1,
-        }
-    }
-
-    suit_count
 }
 
 fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
@@ -50,8 +35,6 @@ fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
 }
 
 fn two_pair_or_three_of_a_kind(mut cards: Vec<Card>) -> Ranking {
-    let suit_count = count_suits(cards.clone());
-
     let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
 
     for x in 0..cards.len() {
@@ -89,7 +72,6 @@ fn two_pair_or_three_of_a_kind(mut cards: Vec<Card>) -> Ranking {
 }
 
 fn further_evaluation(mut cards: Vec<Card>) -> Ranking {
-    let previous_suit: Suit;
     let mut is_flush = false;
     let mut is_straight = false;
 
@@ -167,134 +149,127 @@ pub fn rank_hand(cards: Vec<Card>) -> Ranking {
 
 #[test]
 fn rank_hand_straightflush() {
-	let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
+    let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
 
-	assert_eq!(Ranking::StraightFlush, rank_hand(test_hand_straightflush));
+    assert_eq!(Ranking::StraightFlush, rank_hand(test_hand_straightflush));
 }
 
 #[test]
 fn rank_hand_fourofakind() {
-	let test_hand_fourofakind = vec![Card { rank: Rank::Six, suit: Suit::Club }, Card { rank: Rank::Six, suit: Suit::Diamond }, Card { rank: Rank::Six, suit: Suit::Heart }, Card { rank: Rank::Six, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Heart }];
+    let test_hand_fourofakind = vec![Card { rank: Rank::Six, suit: Suit::Club }, Card { rank: Rank::Six, suit: Suit::Diamond }, Card { rank: Rank::Six, suit: Suit::Heart }, Card { rank: Rank::Six, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Heart }];
 
-	assert_eq!(Ranking::FourOfAKind, rank_hand(test_hand_fourofakind));
+    assert_eq!(Ranking::FourOfAKind, rank_hand(test_hand_fourofakind));
 }
 
 #[test]
 fn rank_hand_fullhouse() {
-	let test_hand_fullhouse = vec![Card { rank: Rank::Five, suit: Suit::Spade }, Card { rank: Rank::Five, suit: Suit::Club }, Card { rank: Rank::Five, suit: Suit::Diamond }, Card { rank: Rank::King, suit: Suit::Club }, Card { rank: Rank::King, suit: Suit::Heart }];
+    let test_hand_fullhouse = vec![Card { rank: Rank::Five, suit: Suit::Spade }, Card { rank: Rank::Five, suit: Suit::Club }, Card { rank: Rank::Five, suit: Suit::Diamond }, Card { rank: Rank::King, suit: Suit::Club }, Card { rank: Rank::King, suit: Suit::Heart }];
 
-	assert_eq!(Ranking::FullHouse, rank_hand(test_hand_fullhouse));
+    assert_eq!(Ranking::FullHouse, rank_hand(test_hand_fullhouse));
 }
 
 #[test]
 fn rank_hand_flush() {
-	let test_hand_flush = vec![Card { rank: Rank::Jack, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Diamond }, Card { rank: Rank::Eight, suit: Suit::Diamond }, Card { rank: Rank::Seven, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Diamond }];
+    let test_hand_flush = vec![Card { rank: Rank::Jack, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Diamond }, Card { rank: Rank::Eight, suit: Suit::Diamond }, Card { rank: Rank::Seven, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Diamond }];
 
-	assert_eq!(Ranking::Flush, rank_hand(test_hand_flush));
+    assert_eq!(Ranking::Flush, rank_hand(test_hand_flush));
 }
 
 #[test]
 fn rank_hand_straight() {
-	let test_hand_straight = vec![Card { rank: Rank::King, suit: Suit::Diamond }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Heart }, Card { rank: Rank::Nine, suit: Suit::Spade }];
+    let test_hand_straight = vec![Card { rank: Rank::King, suit: Suit::Diamond }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Heart }, Card { rank: Rank::Nine, suit: Suit::Spade }];
 
-	assert_eq!(Ranking::Straight, rank_hand(test_hand_straight));
+    assert_eq!(Ranking::Straight, rank_hand(test_hand_straight));
 }
 
 #[test]
 fn rank_hand_threeofakind() {
-	let test_hand_threeofakind = vec![Card { rank: Rank::Ace, suit: Suit::Club }, Card { rank: Rank::Ace, suit: Suit::Spade }, Card { rank: Rank::Ace, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Spade }];
+    let test_hand_threeofakind = vec![Card { rank: Rank::Ace, suit: Suit::Club }, Card { rank: Rank::Ace, suit: Suit::Spade }, Card { rank: Rank::Ace, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Spade }];
 
-	assert_eq!(Ranking::ThreeOfAKind, rank_hand(test_hand_threeofakind));
+    assert_eq!(Ranking::ThreeOfAKind, rank_hand(test_hand_threeofakind));
 }
 
 #[test]
 fn rank_hand_twopair() {
-	let test_hand_twopair = vec![Card { rank: Rank::Queen, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Eight, suit: Suit::Heart }, Card { rank: Rank::Eight, suit: Suit::Spade }, Card { rank: Rank::Two, suit: Suit::Club }];
+    let test_hand_twopair = vec![Card { rank: Rank::Queen, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Eight, suit: Suit::Heart }, Card { rank: Rank::Eight, suit: Suit::Spade }, Card { rank: Rank::Two, suit: Suit::Club }];
 
-	assert_eq!(Ranking::TwoPair, rank_hand(test_hand_twopair));
+    assert_eq!(Ranking::TwoPair, rank_hand(test_hand_twopair));
 }
 
 #[test]
 fn rank_hand_onepair() {
-	let test_hand_onepair = vec![Card { rank: Rank::Seven, suit: Suit::Spade }, Card { rank: Rank::Seven, suit: Suit::Heart }, Card { rank: Rank::King, suit: Suit::Spade }, Card { rank: Rank::Four, suit: Suit::Club }, Card { rank: Rank::Three, suit: Suit::Spade }];
+    let test_hand_onepair = vec![Card { rank: Rank::Seven, suit: Suit::Spade }, Card { rank: Rank::Seven, suit: Suit::Heart }, Card { rank: Rank::King, suit: Suit::Spade }, Card { rank: Rank::Four, suit: Suit::Club }, Card { rank: Rank::Three, suit: Suit::Spade }];
 
-	assert_eq!(Ranking::OnePair, rank_hand(test_hand_onepair));
+    assert_eq!(Ranking::OnePair, rank_hand(test_hand_onepair));
 }
 
 #[test]
 fn rank_hand_highcard() {
-	let test_hand_highcard = vec![Card { rank: Rank::Ace, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Spade }, Card { rank: Rank::Nine, suit: Suit::Heart }, Card { rank: Rank::Four, suit: Suit::Diamond }, Card { rank: Rank::Three, suit: Suit::Club }];
+    let test_hand_highcard = vec![Card { rank: Rank::Ace, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Spade }, Card { rank: Rank::Nine, suit: Suit::Heart }, Card { rank: Rank::Four, suit: Suit::Diamond }, Card { rank: Rank::Three, suit: Suit::Club }];
 
-	assert_eq!(Ranking::HighCard, rank_hand(test_hand_highcard));
+    assert_eq!(Ranking::HighCard, rank_hand(test_hand_highcard));
 }
 
 #[test]
 fn test_prepare() {
-	let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
+    let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
 
-	assert_eq!(5, prepare(test_hand_straightflush));
-}
-
-#[test]
-fn test_count_suits() {
-	let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
-	let test_suit_count = vec![5, 0, 0, 0];
-
-	assert_eq!(test_suit_count, count_suits(test_hand_straightflush));
+    assert_eq!(5, prepare(test_hand_straightflush));
 }
 
 #[test]
 fn full_house() {
-	let test_hand_fullhouse = vec![Card { rank: Rank::Five, suit: Suit::Spade }, Card { rank: Rank::Five, suit: Suit::Club }, Card { rank: Rank::Five, suit: Suit::Diamond }, Card { rank: Rank::King, suit: Suit::Club }, Card { rank: Rank::King, suit: Suit::Heart }];
+    let test_hand_fullhouse = vec![Card { rank: Rank::Five, suit: Suit::Spade }, Card { rank: Rank::Five, suit: Suit::Club }, Card { rank: Rank::Five, suit: Suit::Diamond }, Card { rank: Rank::King, suit: Suit::Club }, Card { rank: Rank::King, suit: Suit::Heart }];
 
-	assert_eq!(Ranking::FullHouse, full_house_or_four_of_a_kind(test_hand_fullhouse));
+    assert_eq!(Ranking::FullHouse, full_house_or_four_of_a_kind(test_hand_fullhouse));
 }
 
 #[test]
 fn four_of_a_kind() {
-	let test_hand_fourofakind = vec![Card { rank: Rank::Six, suit: Suit::Club }, Card { rank: Rank::Six, suit: Suit::Diamond }, Card { rank: Rank::Six, suit: Suit::Heart }, Card { rank: Rank::Six, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Heart }];
+    let test_hand_fourofakind = vec![Card { rank: Rank::Six, suit: Suit::Club }, Card { rank: Rank::Six, suit: Suit::Diamond }, Card { rank: Rank::Six, suit: Suit::Heart }, Card { rank: Rank::Six, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Heart }];
 
-	assert_eq!(Ranking::FourOfAKind, full_house_or_four_of_a_kind(test_hand_fourofakind));
+    assert_eq!(Ranking::FourOfAKind, full_house_or_four_of_a_kind(test_hand_fourofakind));
 }
 
 #[test]
 fn two_pair() {
-	let test_hand_twopair = vec![Card { rank: Rank::Queen, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Eight, suit: Suit::Heart }, Card { rank: Rank::Eight, suit: Suit::Spade }, Card { rank: Rank::Two, suit: Suit::Club }];
+    let test_hand_twopair = vec![Card { rank: Rank::Queen, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Eight, suit: Suit::Heart }, Card { rank: Rank::Eight, suit: Suit::Spade }, Card { rank: Rank::Two, suit: Suit::Club }];
 
-	assert_eq!(Ranking::TwoPair, two_pair_or_three_of_a_kind(test_hand_twopair));
+    assert_eq!(Ranking::TwoPair, two_pair_or_three_of_a_kind(test_hand_twopair));
 }
 
 #[test]
 fn three_of_a_kind() {
-	let test_hand_threeofakind = vec![Card { rank: Rank::Ace, suit: Suit::Club }, Card { rank: Rank::Ace, suit: Suit::Spade }, Card { rank: Rank::Ace, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Spade }];
+    let test_hand_threeofakind = vec![Card { rank: Rank::Ace, suit: Suit::Club }, Card { rank: Rank::Ace, suit: Suit::Spade }, Card { rank: Rank::Ace, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Spade }];
 
-	assert_eq!(Ranking::ThreeOfAKind, two_pair_or_three_of_a_kind(test_hand_threeofakind));
+    assert_eq!(Ranking::ThreeOfAKind, two_pair_or_three_of_a_kind(test_hand_threeofakind));
 }
 
 #[test]
 fn further_evaluation_straightflush() {
-	let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
+    let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
 
-	assert_eq!(Ranking::StraightFlush, further_evaluation(test_hand_straightflush));
+    assert_eq!(Ranking::StraightFlush, further_evaluation(test_hand_straightflush));
 }
 
 #[test]
 fn further_evaluation_flush() {
-	let test_hand_flush = vec![Card { rank: Rank::Jack, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Diamond }, Card { rank: Rank::Eight, suit: Suit::Diamond }, Card { rank: Rank::Seven, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Diamond }];
+    let test_hand_flush = vec![Card { rank: Rank::Jack, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Diamond }, Card { rank: Rank::Eight, suit: Suit::Diamond }, Card { rank: Rank::Seven, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Diamond }];
 
-	assert_eq!(Ranking::Flush, further_evaluation(test_hand_flush));
+    assert_eq!(Ranking::Flush, further_evaluation(test_hand_flush));
 }
 
 #[test]
 fn further_evaluation_straight() {
-	let test_hand_straight = vec![Card { rank: Rank::King, suit: Suit::Diamond }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Heart }, Card { rank: Rank::Nine, suit: Suit::Spade }];
+    let test_hand_straight = vec![Card { rank: Rank::King, suit: Suit::Diamond }, Card { rank: Rank::Queen, suit: Suit::Spade }, Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Heart }, Card { rank: Rank::Nine, suit: Suit::Spade }];
 
-	assert_eq!(Ranking::Straight, further_evaluation(test_hand_straight));
+    assert_eq!(Ranking::Straight, further_evaluation(test_hand_straight));
 }
 
 #[test]
 fn further_evaluation_highcard() {
-	let test_hand_highcard = vec![Card { rank: Rank::Ace, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Spade }, Card { rank: Rank::Nine, suit: Suit::Heart }, Card { rank: Rank::Four, suit: Suit::Diamond }, Card { rank: Rank::Three, suit: Suit::Club }];
+    let test_hand_highcard = vec![Card { rank: Rank::Ace, suit: Suit::Diamond }, Card { rank: Rank::Ten, suit: Suit::Spade }, Card { rank: Rank::Nine, suit: Suit::Heart }, Card { rank: Rank::Four, suit: Suit::Diamond }, Card { rank: Rank::Three, suit: Suit::Club }];
 
-	assert_eq!(Ranking::HighCard, further_evaluation(test_hand_highcard));
+    assert_eq!(Ranking::HighCard, further_evaluation(test_hand_highcard));
 }
+

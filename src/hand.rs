@@ -32,10 +32,6 @@ impl Hand {
         self.cards.push(card);
     }
 
-    fn discard_card(&mut self, card: Card) {
-        self.cards.pop();
-    }
-
     pub fn show_hand(&self) {
         for card in &self.cards {
             card.print_card();
