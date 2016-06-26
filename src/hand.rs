@@ -1,7 +1,7 @@
 use card::Card;
 
 #[allow(dead_code)]
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Ranking {
     HighCard,
     OnePair,
