@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use card::{Card, Rank, Suit};
 use hand::Ranking;
 
-fn prepare(cards: Vec<Card>) -> usize {
+fn prepare(cards: &Vec<Card>) -> usize {
     let mut hand_map: HashMap<Rank, i32> = HashMap::new();
 
     for card in cards {
@@ -17,7 +17,7 @@ fn prepare(cards: Vec<Card>) -> usize {
     hand_map.len()
 }
 
-fn sort_cards_desc(mut cards: Vec<Card>) -> Vec<Card> {
+fn sort_cards_desc(cards: &mut Vec<Card>) {
     let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
 
     for x in 0..cards.len() {
@@ -42,8 +42,6 @@ fn sort_cards_desc(mut cards: Vec<Card>) -> Vec<Card> {
             }
         }
     }
-
-    cards
 }
 
 fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
@@ -64,7 +62,7 @@ fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
 }
 
 fn two_pair_or_three_of_a_kind(cards: Vec<Card>) -> Ranking {
-    let cards = sort_cards_desc(cards);
+    sort_cards_desc(&mut cards);
 
     for x in 0..cards.len() {
         if x + 2 <= cards.len()
@@ -88,7 +86,7 @@ fn further_evaluation(cards: Vec<Card>) -> Ranking {
             is_flush = true;
     }
 
-    let cards = sort_cards_desc(cards);
+    sort_cards_desc(&mut cards);
     let mut valued_ranks: Vec<usize> = Vec::new();
     let ranks = vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six, Rank::Seven, Rank::Eight, Rank::Nine, Rank::Ten, Rank::Jack, Rank::Queen, Rank::King, Rank::Ace];
 
@@ -119,7 +117,7 @@ fn further_evaluation(cards: Vec<Card>) -> Ranking {
 }
 
 pub fn rank_hand(cards: Vec<Card>) -> Ranking {
-    let hand_map_size = prepare(cards.clone());
+    let hand_map_size = prepare(&cards);
 
     match hand_map_size {
         2 => full_house_or_four_of_a_kind(cards),
