@@ -8,11 +8,11 @@ mod hand_ranker;
 use deck::Deck;
 use hand::{Hand, Ranking};
 
-fn draw_hand(mut deck: Deck, mut hand: Hand) -> (Deck, Hand) {
+fn draw_hand(deck: &mut Deck, mut hand: Hand) -> Hand {
     for x in 0..5 {
         hand.add_card(deck.draw_card());
     }
-    (deck, hand)
+    hand
 }
 
 fn determine_winner(ranking1: Ranking, ranking2: Ranking) {
@@ -46,8 +46,8 @@ fn main() {
 
     deck.shuffle_deck();
 
-    let (deck, mut hand1) = draw_hand(deck, hand1);
-    let (deck, mut hand2) = draw_hand(deck, hand2);
+    let mut hand1 = draw_hand(&mut deck, hand1);
+    let mut hand2 = draw_hand(&mut deck, hand2);
 
     let ranking1 = hand_ranker::rank_hand(hand1.cards.clone());
     hand1.set_ranking(ranking1);
