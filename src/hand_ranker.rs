@@ -61,7 +61,7 @@ fn full_house_or_four_of_a_kind(cards: Vec<Card>) -> Ranking {
     }
 }
 
-fn two_pair_or_three_of_a_kind(cards: Vec<Card>) -> Ranking {
+fn two_pair_or_three_of_a_kind(mut cards: Vec<Card>) -> Ranking {
     sort_cards_desc(&mut cards);
 
     for x in 0..cards.len() {
@@ -75,7 +75,7 @@ fn two_pair_or_three_of_a_kind(cards: Vec<Card>) -> Ranking {
     Ranking::TwoPair
 }
 
-fn further_evaluation(cards: Vec<Card>) -> Ranking {
+fn further_evaluation(mut cards: Vec<Card>) -> Ranking {
     let mut is_flush = false;
     let mut is_straight = false;
 
