@@ -16,7 +16,15 @@ fn draw_hand(deck: &mut Deck, mut hand: Hand) -> Hand {
 }
 
 fn determine_winner(ranking1: Ranking, ranking2: Ranking) {
-    let rankings = [Ranking::HighCard, Ranking::OnePair, Ranking::TwoPair, Ranking::ThreeOfAKind, Ranking::Straight, Ranking::Flush, Ranking::FullHouse, Ranking::FourOfAKind, Ranking::StraightFlush];
+    let rankings = [Ranking::HighCard,
+                    Ranking::OnePair,
+                    Ranking::TwoPair,
+                    Ranking::ThreeOfAKind,
+                    Ranking::Straight,
+                    Ranking::Flush,
+                    Ranking::FullHouse,
+                    Ranking::FourOfAKind,
+                    Ranking::StraightFlush];
 
     let mut rank_value1 = 0;
     let mut rank_value2 = 0;
