@@ -6,7 +6,7 @@ Written in Rust to learn and play with the language.
 Inspired by a similar program written by Donne Martin (https://github.com/donnemartin/poker).
 
 ##### TODO:
-* Implement code check for low ace straight
+* ~~Implement code check for low ace straight~~
 * In the case that both hands have high card, use the highest card between the hands to determine the winner
 * Use borrowing for the following:
   * ~~in main.rs for the draw_hand method~~

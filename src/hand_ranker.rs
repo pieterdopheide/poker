@@ -98,7 +98,8 @@ fn further_evaluation(mut cards: Vec<Card>) -> Ranking {
         }
     }
 
-    if valued_ranks[0] == valued_ranks[1] + 1
+    if (valued_ranks[0] == valued_ranks[1] + 1
+        || valued_ranks[0] == 12)
         && valued_ranks[1] == valued_ranks[2] + 1
         && valued_ranks[2] == valued_ranks[3] + 1
         && valued_ranks[3] == valued_ranks[4] + 1 {
@@ -164,6 +165,16 @@ fn rank_hand_straight() {
 }
 
 #[test]
+fn rank_hand_low_ace_straight() {
+    let test_hand_low_ace_straight = vec![Card { rank: Rank::Ace, suit: Suit::Diamond },
+                                            Card { rank: Rank::Two, suit: Suit::Spade },
+                                            Card { rank: Rank::Three, suit: Suit::Club },
+                                            Card { rank: Rank::Four, suit: Suit::Heart },
+                                            Card { rank: Rank::Five, suit: Suit::Spade }];
+    assert_eq!(Ranking::Straight, rank_hand(test_hand_low_ace_straight));
+}
+
+#[test]
 fn rank_hand_threeofakind() {
     let test_hand_threeofakind = vec![Card { rank: Rank::Ace, suit: Suit::Club }, Card { rank: Rank::Ace, suit: Suit::Spade }, Card { rank: Rank::Ace, suit: Suit::Heart }, Card { rank: Rank::Queen, suit: Suit::Diamond }, Card { rank: Rank::Two, suit: Suit::Spade }];
 
@@ -195,7 +206,7 @@ fn rank_hand_highcard() {
 fn test_prepare() {
     let test_hand_straightflush = vec![Card { rank: Rank::Jack, suit: Suit::Club }, Card { rank: Rank::Ten, suit: Suit::Club }, Card { rank: Rank::Nine, suit: Suit::Club }, Card { rank: Rank::Eight, suit: Suit::Club }, Card { rank: Rank::Seven, suit: Suit::Club }];
 
-    assert_eq!(5, prepare(test_hand_straightflush));
+    assert_eq!(5, prepare(&test_hand_straightflush));
 }
 
 #[test]
